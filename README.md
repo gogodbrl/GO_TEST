@@ -7,6 +7,13 @@ go언어 테스트를 해보자. 잘 될까?ㅋ
 
 parser.py -> summary.py 로 마지막 통계값을 내면 되고
 
-eventTest.go로 저 데이터값을 불러오면 되느니
+eventTest.go는 채널통신 하는 걸로
 
-수고.
+
+시간은 python 26초정도
+go는 22초정도
+
+비슷한듯.
+
+
+
