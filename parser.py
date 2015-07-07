@@ -1,25 +1,15 @@
 #/bin/env python
 #usage : compare golang in eventflow
 
+import time
 import random
+import sys
 
-READLINE = 10
-
-def sample_make_write():
-	f = open('sample_raw.txt','w')
-	sample_string='ab'
-
-	for i in xrange(READLINE):
-		f.write("%s,%s,%s,%s\n" %(random.choice(sample_string), random.choice(sample_string), random.randint(1,5), random.randint(5,10)))
-	f.write('END')
-	f.close()
+READLINE = 100000
 
 def parser() :
-	with open('sample_raw.txt','r') as f:
-		datas = f.readlines()
-
-	f = open('sample_output.txt','w') 
-	for line in datas : 
+	f = open('/dev/shm/TEST/sample_meta.txt','w') 
+	for line in open('/dev/shm/TEST/sample_input.txt','r') :
 		line = line.strip()
 		data = line.split(',')
 
@@ -33,5 +23,13 @@ def parser() :
 			f.write("%s,%s\n" %(line, 1))
 	f.close()
 
+	sys.stdout.write("file://%s\n" % f.name)
+	sys.stdout.flush()
 #sample_make_write()
+
+st_time = time.time()
 parser()
+sys.stderr.write('Processing Time : %.3f\n' % (time.time() - st_time))
+sys.stderr.flush()
+
+time.sleep(999999999)

@@ -1,45 +1,67 @@
-#/bin/env python
+#!/bin/env pypy
 #coding:utf-8
 #usage : file summary for certain key.
+import sys
+import time
+import pdb 
 
-def sample_read():
-	with open('sample_output.txt','r') as f:
+def sample_read(file_path):
+	with open(file_path,'r') as f:
 		datas = f.readlines()
 	return datas
 
-def key_alphabet(datas) :
+def key_alphabet(file_path, key_list, val_list) :
 	kv_dict={}
 
-	for line in datas :
-		line = line.strip()
-		data = line.split(',') #['a', 'b', '1', '5', '0']
-		
-		if line=='END' :
-			break
+	file_name = 'k%s_v%s.txt' % (''.join(key_list), ''.join(val_list))
 
-		key = data[0]+data[1]
-		if not kv_dict.has_key(key):
-			kv_dict[key]=[0,0] # [odd_count, eval_count]
-	
-		#ab의 값중에 짝수는 x번 출현 홀수는 y번 출현했다.
-		odd_count = int(kv_dict[key][0])
-		eval_count = int(kv_dict[key][1])
+	key_list = [ int(idx) for idx in key_list ]
+	val_list = [ int(idx) for idx in val_list ]
 
-		if int(data[4]) == 0 : #eval
-			kv_dict[key]=[odd_count,eval_count+1]
-		else : #odd
-			kv_dict[key]=[odd_count+1,eval_count]
 
-	f = open('sample_result.txt','w') 
+	for line in open(file_path,'r'):
+
+		data = line.strip().split(',')
+		key = ','.join( [ data[idx] for idx in key_list ] )
+
+		try :
+			kv_data = kv_dict[key]
+
+			pdb.set_trace()
+			for enum, idx in enumerate(val_idx) :
+				kv_data[enum] += int(data[idx])
+
+		except :
+			kv_dict[key] = [ int(data[idx]) for idx in val_list ]
+
+	f = open('/dev/shm/TEST/%s' % file_name,'w') 
 	for k in kv_dict.keys() :
-		f.write("%s %s\n" %(k, kv_dict[k]))
+		f.write("%s : %s\n" %(k, ','.join([str(i) for i in kv_dict[k]])))
 	f.close()
+	sys.stdout.write('file://%s\n' % f.name)
+	sys.stdout.flush()
 
 
 def key_odd_eval(datas) :
 	pass
 
+key_list = sys.argv[1].split(',')
+val_list = sys.argv[2].split(',')
 
-datas = sample_read()
-key_alphabet(datas)
+test_input = sys.stdin.readline()
+test_input = test_input.strip()
+
+file_path = test_input.split("://")[1]
+
+st_time = time.time()
+key_alphabet(file_path, key_list, val_list)
+
+sys.stderr.write(test_input + '\n')
+sys.stderr.write('Processing Time : %.3f\n' % (time.time() - st_time))
+sys.stderr.flush()
 #key_odd_eval(datas)
+
+
+
+
+time.sleep(888888888)
